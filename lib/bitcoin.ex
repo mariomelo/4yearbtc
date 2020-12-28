@@ -55,7 +55,7 @@ defmodule Bitcoin do
   end
 
   def write_html_file(content) do
-    {:ok, file} = File.open("index.html", [:write])
+    {:ok, file} = File.open("#{@start_date}.html", [:write])
     IO.binwrite(file, content)
     File.close(file)
   end
