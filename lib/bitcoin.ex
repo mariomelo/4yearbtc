@@ -8,7 +8,7 @@ defmodule Bitcoin do
   Documentation for `Bitcoin`.
   """
 
-  def get_data do
+  def generate_html do
     {:ok, data} = HTTPoison.get(@server_url)
 
     quotes =
@@ -55,14 +55,20 @@ defmodule Bitcoin do
   end
 
   def write_html_file(content) do
-    {:ok, file} = File.open("readme.html", [:write])
+    {:ok, file} = File.open("index.html", [:write])
     IO.binwrite(file, content)
     File.close(file)
   end
 
   def place_data(content, placeholder, data) do
+    formatted_data =
+      data
+      |> Kernel.*(100)
+      |> Float.round(2)
+      |> to_string()
+
     content
-    |> String.replace(placeholder, data)
+    |> String.replace(placeholder, formatted_data)
   end
 
   def get_quote_diff(original_date, _quotes)
@@ -83,9 +89,6 @@ defmodule Bitcoin do
   defp get_minimum(gains) do
     Enum.min_by(gains, fn [_date, gain] -> gain end)
     |> Enum.at(1)
-    |> Kernel.*(100)
-    |> Float.round(2)
-    |> to_string()
   end
 
   defp get_average(gains) do
@@ -93,13 +96,10 @@ defmodule Bitcoin do
     |> Enum.map(fn [_date, profit] -> profit end)
     |> Enum.reduce(fn profit, acc -> acc + profit end)
     |> Kernel./(length(gains))
-    |> Kernel.*(100)
-    |> Float.round(2)
-    |> to_string()
   end
 
-  defp get_p90(gains) do
-    limit = floor(length(gains) / 10)
+  def get_p90(gains) do
+    limit = length(gains) - floor(length(gains) / 10)
 
     gains
     |> Enum.map(fn [_date, profit] -> profit end)
@@ -108,8 +108,5 @@ defmodule Bitcoin do
     |> Enum.slice(0..limit)
     |> Enum.reverse()
     |> Enum.at(0)
-    |> Kernel.*(100)
-    |> Float.round(2)
-    |> to_string()
   end
 end
