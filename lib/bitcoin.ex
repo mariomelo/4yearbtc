@@ -2,7 +2,7 @@ defmodule Bitcoin do
   @start_date "2014-07-18"
   @map_key "bpi"
   @year_gap 4
-  @server_url "https://api.coindesk.com/v1/bpi/historical/close.json?start=2010-07-17&end=2020-12-27"
+  @server_url "https://api.coindesk.com/v1/bpi/historical/close.json?start=2010-07-17&end=2022-09-15"
 
   @moduledoc """
   Documentation for `Bitcoin`.
